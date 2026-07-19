@@ -1,0 +1,7 @@
+torch>=2.0.0
+sentencepiece>=0.1.99
+numpy>=1.20.0
+fastapi>=0.100.0
+uvicorn>=0.22.0
+pydantic>=2.0.0
+python-multipart>=0.0.6

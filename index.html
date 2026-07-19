@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Playground</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div id="app-container">
+        <!-- Sidebar Controls -->
+        <aside id="sidebar">
+            <div class="sidebar-header">
+                <span id="badge-device" class="badge">MPS</span>
+            </div>
+
+            <div class="sidebar-section">
+                <h3>Checkpoints</h3>
+                <div class="control-group">
+                    <label for="select-checkpoint">Active Checkpoint</label>
+                    <select id="select-checkpoint">
+                        <option value="">No checkpoints found</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <h3>Parameters</h3>
+                
+                <div class="control-group" id="group-temperature">
+                    <div class="control-label">
+                        <label for="range-temperature">Temperature</label>
+                        <span class="value-display" id="val-temperature">0.8</span>
+                    </div>
+                    <input type="range" id="range-temperature" min="0.1" max="2.0" step="0.1" value="0.8">
+                </div>
+
+                <div class="control-group" id="group-top-k">
+                    <div class="control-label">
+                        <label for="range-top-k">Top-K</label>
+                        <span class="value-display" id="val-top-k">50</span>
+                    </div>
+                    <input type="range" id="range-top-k" min="1" max="100" step="1" value="50">
+                </div>
+
+                <div class="control-group">
+                    <div class="control-label">
+                        <label for="range-max-tokens">Max Tokens</label>
+                        <span class="value-display" id="val-max-tokens">150</span>
+                    </div>
+                    <input type="range" id="range-max-tokens" min="10" max="500" step="10" value="150">
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main id="main-content">
+            <header id="main-header">
+                <div class="header-titles">
+                    <h1>Playground</h1>
+                    <p class="subtitle">Interact with your trained Decoder-Only Transformer model</p>
+                </div>
+                <div class="model-status">
+                    <span class="status-dot green" id="status-dot"></span>
+                    <span class="status-text" id="status-text">Connected</span>
+                </div>
+            </header>
+
+            <section id="playground-viewport">
+                <!-- Text Area Input -->
+                <div class="input-card">
+                    <textarea id="prompt-input" placeholder="Type your generation prompt here..."></textarea>
+                    <div class="action-bar">
+                        <button id="btn-clear" class="secondary-btn">Clear</button>
+                        <button id="btn-generate" class="primary-btn">
+                            <span>Generate Text</span>
+                            <div class="spinner" id="btn-spinner"></div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Text Output Viewport -->
+                <div class="output-card">
+                    <div class="output-header">
+                        <h4>Generated Output</h4>
+                        <button id="btn-copy" class="icon-btn" title="Copy text">Copy</button>
+                    </div>
+                    <div id="output-display" class="placeholder">
+                        Press generate to start writing...
+                    </div>
+                </div>
+
+                <!-- Model Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stats-card">
+                        <span class="stat-label">Model Size</span>
+                        <span class="stat-value" id="stat-params">11.13M</span>
+                    </div>
+                    <div class="stats-card">
+                        <span class="stat-label">Embedding Dim</span>
+                        <span class="stat-value" id="stat-embed">384</span>
+                    </div>
+                    <div class="stats-card">
+                        <span class="stat-label">Layers / Heads</span>
+                        <span class="stat-value" id="stat-architecture">6 / 6</span>
+                    </div>
+                    <div class="stats-card">
+                        <span class="stat-label">Context Size</span>
+                        <span class="stat-value" id="stat-block">256</span>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <script src="/static/app.js"></script>
+</body>
+</html>

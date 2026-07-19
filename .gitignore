@@ -1,0 +1,24 @@
+# Python virtual environment
+.venv/
+venv/
+ENV/
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Local project outputs and logs
+logs/
+outputs/
+
+# Large training datasets and checkpoints
+data/raw/input.txt
+data/processed/train.pt
+data/processed/val.pt
+# Exclude large checkpoint files by default to avoid GitHub's 100MB file size limit
+checkpoints/*.pt
+# Keep only the split zip files for model reassembly
+!checkpoints/checkpoint_best.zip.aa
+!checkpoints/checkpoint_best.zip.ab
+
