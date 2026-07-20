@@ -26,8 +26,19 @@ def create_datasets(token_ids: List[int], block_size: int, split_ratio: float = 
     return train_dataset, val_dataset
 
 
-def get_dataloader(dataset: GPTDataset, batch_size: int, shuffle: bool = True) -> DataLoader:
-    return DataLoader(dataset, batch_size=batch_size, shuffle=shuffle, pin_memory=True)
+def get_dataloader(
+    dataset: GPTDataset,
+    batch_size: int,
+    shuffle: bool = True,
+    generator: torch.Generator = None,
+) -> DataLoader:
+    return DataLoader(
+        dataset,
+        batch_size=batch_size,
+        shuffle=shuffle,
+        pin_memory=True,
+        generator=generator,
+    )
 
 
 def get_batch(data: torch.Tensor, batch_size: int, block_size: int, device: str) -> Tuple[torch.Tensor, torch.Tensor]:

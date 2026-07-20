@@ -82,6 +82,7 @@ class TrainingConfig:
     checkpoint_dir: str = "checkpoints"
     output_dir: str = "outputs"
     log_dir: str = "logs"
+    overwrite_step_checkpoints: bool = False
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert configuration to a dictionary representation."""
@@ -104,4 +105,5 @@ class TrainingConfig:
             "log_dir": self.log_dir,
             "use_amp": self.use_amp,
             "gradient_accumulation_steps": self.gradient_accumulation_steps,
+            "overwrite_step_checkpoints": self.overwrite_step_checkpoints,
         }

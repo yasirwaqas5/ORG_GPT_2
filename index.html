@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Playground</title>
+    <meta name="theme-color" content="#0d0b14">
+    <meta name="description" content="A local playground for generating text with a trained decoder-only Transformer model.">
+    <title>GPT-2 Playground</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
@@ -14,7 +16,11 @@
         <!-- Sidebar Controls -->
         <aside id="sidebar">
             <div class="sidebar-header">
-                <span id="badge-device" class="badge">MPS</span>
+                <div>
+                    <p class="eyebrow">Local inference</p>
+                    <h2>GPT-2</h2>
+                </div>
+                <span id="badge-device" class="badge">LOCAL</span>
             </div>
 
             <div class="sidebar-section">
@@ -72,12 +78,14 @@
             <section id="playground-viewport">
                 <!-- Text Area Input -->
                 <div class="input-card">
-                    <textarea id="prompt-input" placeholder="Type your generation prompt here..."></textarea>
+                    <label class="sr-only" for="prompt-input">Generation prompt</label>
+                    <textarea id="prompt-input" aria-describedby="prompt-hint" placeholder="Type your generation prompt here..."></textarea>
+                    <p id="prompt-hint" class="field-hint">Your prompt is sent to the locally loaded checkpoint.</p>
                     <div class="action-bar">
-                        <button id="btn-clear" class="secondary-btn">Clear</button>
-                        <button id="btn-generate" class="primary-btn">
+                        <button type="button" id="btn-clear" class="secondary-btn">Clear</button>
+                        <button type="button" id="btn-generate" class="primary-btn">
                             <span>Generate Text</span>
-                            <div class="spinner" id="btn-spinner"></div>
+                            <span class="spinner" id="btn-spinner" aria-hidden="true"></span>
                         </button>
                     </div>
                 </div>
@@ -86,9 +94,9 @@
                 <div class="output-card">
                     <div class="output-header">
                         <h4>Generated Output</h4>
-                        <button id="btn-copy" class="icon-btn" title="Copy text">Copy</button>
+                        <button type="button" id="btn-copy" class="icon-btn" title="Copy generated text">Copy</button>
                     </div>
-                    <div id="output-display" class="placeholder">
+                    <div id="output-display" class="placeholder" role="status" aria-live="polite" aria-atomic="false">
                         Press generate to start writing...
                     </div>
                 </div>
@@ -97,19 +105,19 @@
                 <div class="stats-grid">
                     <div class="stats-card">
                         <span class="stat-label">Model Size</span>
-                        <span class="stat-value" id="stat-params">11.13M</span>
+                        <span class="stat-value" id="stat-params">—</span>
                     </div>
                     <div class="stats-card">
                         <span class="stat-label">Embedding Dim</span>
-                        <span class="stat-value" id="stat-embed">384</span>
+                        <span class="stat-value" id="stat-embed">—</span>
                     </div>
                     <div class="stats-card">
                         <span class="stat-label">Layers / Heads</span>
-                        <span class="stat-value" id="stat-architecture">6 / 6</span>
+                        <span class="stat-value" id="stat-architecture">—</span>
                     </div>
                     <div class="stats-card">
                         <span class="stat-label">Context Size</span>
-                        <span class="stat-value" id="stat-block">256</span>
+                        <span class="stat-value" id="stat-block">—</span>
                     </div>
                 </div>
             </section>

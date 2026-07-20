@@ -38,6 +38,27 @@ def check_and_reassemble_checkpoint():
                 if os.path.exists(temp_zip):
                     os.remove(temp_zip)
 
+
+def find_startup_checkpoint():
+    best_path = "checkpoints/checkpoint_best.pt"
+    if os.path.exists(best_path):
+        return best_path
+
+    checkpoint_dir = "checkpoints"
+    if not os.path.isdir(checkpoint_dir):
+        return None
+
+    candidates = []
+    for filename in os.listdir(checkpoint_dir):
+        if filename.startswith("checkpoint_step_") and filename.endswith(".pt"):
+            try:
+                step = int(filename[len("checkpoint_step_"):-3])
+                candidates.append((step, os.path.join(checkpoint_dir, filename)))
+            except ValueError:
+                continue
+    return max(candidates, default=(None, None))[1]
+
+
 check_and_reassemble_checkpoint()
 
 device = "cuda" if torch.cuda.is_available() else ("mps" if torch.backends.mps.is_available() else "cpu")
@@ -47,7 +68,7 @@ model = None
 tokenizer = SentencePieceTokenizer()
 model_config = None
 
-checkpoint_path = "checkpoints/checkpoint_best.pt"
+checkpoint_path = find_startup_checkpoint()
 sp_model_path = "data/processed/sp.model"
 
 if os.path.exists(sp_model_path):
@@ -55,7 +76,7 @@ if os.path.exists(sp_model_path):
 else:
     print(f"Warning: Tokenizer not found at {sp_model_path}")
 
-if os.path.exists(checkpoint_path):
+if checkpoint_path and os.path.exists(checkpoint_path):
     try:
         checkpoint = torch.load(checkpoint_path, map_location=device, weights_only=False)
         model_config = checkpoint['config']
@@ -67,7 +88,7 @@ if os.path.exists(checkpoint_path):
     except Exception as e:
         print(f"Error loading model checkpoint: {e}")
 else:
-    print(f"Warning: Model checkpoint not found at {checkpoint_path}")
+    print("Warning: No model checkpoint found in checkpoints/")
 
 
 class GenerateRequest(BaseModel):
@@ -148,7 +169,7 @@ def get_model_info():
 def generate(request: GenerateRequest):
     global model, tokenizer
     if model is None:
-        if os.path.exists(checkpoint_path):
+        if checkpoint_path and os.path.exists(checkpoint_path):
             try:
                 checkpoint = torch.load(checkpoint_path, map_location=device, weights_only=False)
                 model_config = checkpoint['config']

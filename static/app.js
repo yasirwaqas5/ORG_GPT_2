@@ -21,8 +21,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const statEmbed = document.getElementById("stat-embed");
     const statArchitecture = document.getElementById("stat-architecture");
     const statBlock = document.getElementById("stat-block");
-    const badgeDevice = document.getElementById("badge-device");
-
     // Presets
     const presetButtons = document.querySelectorAll(".preset-btn");
 
@@ -61,6 +59,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 btnCopy.style.borderColor = "";
                 btnCopy.style.color = "";
             }, 1500);
+        }).catch((error) => {
+            console.error("Unable to copy generated text:", error);
         });
     });
 
@@ -187,6 +187,12 @@ document.addEventListener("DOMContentLoaded", () => {
             restText = fullText.slice(promptText.length);
         }
 
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+            if (promptSpan) promptSpan.textContent = promptText;
+            outputDisplay.appendChild(document.createTextNode(restText));
+            return;
+        }
+
         let charIdx = 0;
         let promptIdx = 0;
 
@@ -218,6 +224,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Disable UI controls
         btnGenerate.disabled = true;
+        btnGenerate.setAttribute("aria-busy", "true");
         btnSpinner.style.display = "block";
         outputDisplay.textContent = "Thinking...";
         outputDisplay.classList.remove("placeholder");
@@ -250,6 +257,7 @@ document.addEventListener("DOMContentLoaded", () => {
             outputDisplay.classList.remove("placeholder");
         } finally {
             btnGenerate.disabled = false;
+            btnGenerate.setAttribute("aria-busy", "false");
             btnSpinner.style.display = "none";
         }
     });

@@ -1,6 +1,7 @@
 import os
 import random
 import logging
+import tempfile
 import numpy as np
 import torch
 import torch.nn as nn
@@ -41,9 +42,20 @@ def print_model_summary(model: nn.Module, logger=None) -> None:
 
 
 def save_checkpoint(state: dict, path: str) -> None:
-    """Save model and optimizer state dictionaries to disk."""
-    os.makedirs(os.path.dirname(os.path.abspath(path)), exist_ok=True)
-    torch.save(state, path)
+    """Atomically save a checkpoint so an interruption cannot leave a partial file."""
+    directory = os.path.dirname(os.path.abspath(path))
+    os.makedirs(directory, exist_ok=True)
+    fd, temporary_path = tempfile.mkstemp(prefix=".checkpoint-", suffix=".tmp", dir=directory)
+    os.close(fd)
+    try:
+        with open(temporary_path, "wb") as checkpoint_file:
+            torch.save(state, checkpoint_file)
+            checkpoint_file.flush()
+            os.fsync(checkpoint_file.fileno())
+        os.replace(temporary_path, path)
+    finally:
+        if os.path.exists(temporary_path):
+            os.remove(temporary_path)
 
 
 def load_checkpoint(path: str, device: str = 'cpu') -> dict:
